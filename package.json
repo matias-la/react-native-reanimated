@@ -8,17 +8,14 @@
     "test:unit": "jest",
     "format": "prettier --write --list-different './src/**/*.js'",
     "lint": "eslint './src/**/*.js'",
-    "release": "npm login && release-it",
-    "prepare": "bob build"
+    "release": "npm login && release-it"
   },
-  "main": "lib/commonjs/Animated",
-  "module": "lib/module/Animated",
-  "react-native": "src/Animated",
-  "source": "src/Animated",
+  "main": "src/Animated",
   "types": "react-native-reanimated.d.ts",
   "files": [
     "src/",
-    "lib/",
+    "!**/*.test.js",
+    "!**/__snapshots__/**",
     "android/src/main/AndroidManifest.xml",
     "android/src/main/java/",
     "android/build.gradle",
