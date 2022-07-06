@@ -36,12 +36,10 @@
   },
   "main": "lib/index.js",
   "module": "lib/index",
-  "react-native": "src/index",
-  "source": "src/index",
+  "react-native": "lib/index",
   "types": "react-native-reanimated.d.ts",
   "files": [
     "Common/",
-    "src/",
     "lib/",
     "android/src/main/AndroidManifest.xml",
     "android/src/main/java/",
