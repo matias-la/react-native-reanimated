@@ -37,6 +37,7 @@ class ShareableValue : public std::enable_shared_from_this<ShareableValue>,
   std::unique_ptr<ValueWrapper> valueContainer;
   std::unique_ptr<jsi::Value> hostValue;
   std::weak_ptr<jsi::Value> remoteValue;
+  std::string *functionCode;
   bool containsHostFunction = false;
 
   ShareableValue(RuntimeManager *runtimeManager, std::shared_ptr<Scheduler> s)
@@ -49,6 +50,7 @@ class ShareableValue : public std::enable_shared_from_this<ShareableValue>,
   void adapt(jsi::Runtime &rt, const jsi::Value &value, ValueType objectType);
   void adaptCache(jsi::Runtime &rt, const jsi::Value &value);
   std::string demangleExceptionName(std::string toDemangle);
+  void setFunctionCode(jsi::Runtime &rt, const jsi::Value &value);
 
  public:
   ValueType type = ValueType::UndefinedType;
@@ -58,6 +60,7 @@ class ShareableValue : public std::enable_shared_from_this<ShareableValue>,
       RuntimeManager *runtimeManager,
       ValueType objectType = ValueType::UndefinedType);
   jsi::Value getValue(jsi::Runtime &rt);
+  ~ShareableValue();
 };
 
 } // namespace reanimated
