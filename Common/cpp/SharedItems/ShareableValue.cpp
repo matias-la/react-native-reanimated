@@ -53,6 +53,23 @@ void ShareableValue::adaptCache(jsi::Runtime &rt, const jsi::Value &value) {
   }
 }
 
+void ShareableValue::setFunctionCode(
+        jsi::Runtime &rt,
+        const jsi::Value &value){
+  functionCode = new std::string(
+      value
+      .asObject(rt)
+      .getPropertyAsFunction(rt, "asString")
+      .call(rt)
+      .asString(rt)
+      .utf8(rt)
+  );
+}
+
+ShareableValue::~ShareableValue(){
+  /* if (functionCode) delete functionCode; */
+}
+
 void ShareableValue::adapt(
     jsi::Runtime &rt,
     const jsi::Value &value,
@@ -66,6 +83,7 @@ void ShareableValue::adapt(
         type = ValueType::FrozenObjectType;
         if (object.hasProperty(rt, "__worklet") && object.isFunction(rt)) {
           type = ValueType::WorkletFunctionType;
+          setFunctionCode(rt, value);
         }
         valueContainer = std::make_unique<FrozenObjectWrapper>(
             hiddenProperty.getHostObject<FrozenObject>(rt));
@@ -120,6 +138,7 @@ void ShareableValue::adapt(
       } else {
         // a worklet
         type = ValueType::WorkletFunctionType;
+        setFunctionCode(rt, value);
         valueContainer = std::make_unique<FrozenObjectWrapper>(
             std::make_shared<FrozenObject>(rt, object, runtimeManager));
         auto &frozenObject = ValueWrapper::asFrozenObject(valueContainer);
@@ -372,8 +391,15 @@ jsi::Value ShareableValue::toJSValue(jsi::Runtime &rt) {
 
         auto jsThis = std::make_shared<jsi::Object>(
             frozenObject->shallowClone(*runtimeManager->runtime));
+        /* const std::string& code = */
+        /*     getValue(rt) */
+        /*     .asObject(rt) */
+        /*     .getPropertyAsFunction(rt, "asString") */
+        /*     .call(rt) */
+        /*     .asString(rt) */
+        /*     .utf8(rt); */
         std::shared_ptr<jsi::Function> funPtr(
-            runtimeManager->workletsCache->getFunction(rt, frozenObject));
+            runtimeManager->workletsCache->getFunction(rt, frozenObject, *functionCode));
         auto name = funPtr->getProperty(rt, "name").asString(rt).utf8(rt);
 
         auto clb = [=](jsi::Runtime &rt,
@@ -434,10 +460,15 @@ jsi::Value ShareableValue::toJSValue(jsi::Runtime &rt) {
           runtimeManager->scheduler->scheduleOnUI([=] {
             jsi::Runtime &rt = *runtimeManager->runtime.get();
             auto jsThis = createFrozenWrapper(rt, frozenObject).getObject(rt);
-            auto code =
-                jsThis.getProperty(rt, "asString").asString(rt).utf8(rt);
+            /* const std::string& code = */
+            /*     getValue(rt) */
+            /*     .asObject(rt) */
+            /*     .getPropertyAsFunction(rt, "asString") */
+            /*     .call(rt) */
+            /*     .asString(rt) */
+            /*     .utf8(rt); */
             std::shared_ptr<jsi::Function> funPtr(
-                runtimeManager->workletsCache->getFunction(rt, frozenObject));
+                runtimeManager->workletsCache->getFunction(rt, frozenObject, *functionCode));
 
             jsi::Value *args = new jsi::Value[params.size()];
             for (int i = 0; i < params.size(); ++i) {

@@ -18,7 +18,8 @@ class WorkletsCache {
  public:
   std::shared_ptr<jsi::Function> getFunction(
       jsi::Runtime &rt,
-      std::shared_ptr<reanimated::FrozenObject> frozenObj);
+      std::shared_ptr<reanimated::FrozenObject> frozenObj,
+	  const std::string& code);
 };
 
 } // namespace reanimated

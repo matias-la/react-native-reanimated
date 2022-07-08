@@ -13,7 +13,12 @@ FrozenObject::FrozenObject(
   const size_t count = propertyNames.size(rt);
   namesOrder.reserve(count);
   for (size_t i = 0; i < count; i++) {
-    auto propertyName = propertyNames.getValueAtIndex(rt, i).asString(rt);
+    jsi::String propertyName = propertyNames.getValueAtIndex(rt, i).asString(rt);
+    std::string strPropertyName = propertyName.utf8(rt);
+    if (object.isFunction(rt) && strPropertyName == "asString") {
+        // Ignore the function's asString() method
+        continue;
+    }
     namesOrder.push_back(propertyName.utf8(rt));
     std::string nameStr = propertyName.utf8(rt);
     map[nameStr] = ShareableValue::adapt(
