@@ -54,19 +54,18 @@ void ShareableValue::adaptCache(jsi::Runtime &rt, const jsi::Value &value) {
 }
 
 void ShareableValue::setFunctionCode(
-        jsi::Runtime &rt,
-        const jsi::Value &value){
-  functionCode = new std::string(
-      value
-      .asObject(rt)
-      .getPropertyAsFunction(rt, "asString")
-      .call(rt)
-      .asString(rt)
-      .utf8(rt)
-  );
+    jsi::Runtime &rt,
+    const jsi::Value &value) {
+  // functionCode = new std::string(
+  functionCode =
+      std::make_unique<std::string>(value.asObject(rt)
+                                        .getPropertyAsFunction(rt, "asString")
+                                        .call(rt)
+                                        .asString(rt)
+                                        .utf8(rt));
 }
 
-ShareableValue::~ShareableValue(){
+ShareableValue::~ShareableValue() {
   /* if (functionCode) delete functionCode; */
 }
 
@@ -399,7 +398,11 @@ jsi::Value ShareableValue::toJSValue(jsi::Runtime &rt) {
         /*     .asString(rt) */
         /*     .utf8(rt); */
         std::shared_ptr<jsi::Function> funPtr(
-            runtimeManager->workletsCache->getFunction(rt, frozenObject, *functionCode));
+            runtimeManager->workletsCache->getFunction(
+                rt,
+                frozenObject,
+                (functionCode.get() != nullptr ? functionCode.get()->c_str()
+                                               : NULL)));
         auto name = funPtr->getProperty(rt, "name").asString(rt).utf8(rt);
 
         auto clb = [=](jsi::Runtime &rt,
@@ -468,7 +471,11 @@ jsi::Value ShareableValue::toJSValue(jsi::Runtime &rt) {
             /*     .asString(rt) */
             /*     .utf8(rt); */
             std::shared_ptr<jsi::Function> funPtr(
-                runtimeManager->workletsCache->getFunction(rt, frozenObject, *functionCode));
+                runtimeManager->workletsCache->getFunction(
+                    rt,
+                    frozenObject,
+                    (functionCode.get() != nullptr ? functionCode.get()->c_str()
+                                                   : NULL)));
 
             jsi::Value *args = new jsi::Value[params.size()];
             for (int i = 0; i < params.size(); ++i) {
