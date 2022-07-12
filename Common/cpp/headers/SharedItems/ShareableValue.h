@@ -37,7 +37,8 @@ class ShareableValue : public std::enable_shared_from_this<ShareableValue>,
   std::unique_ptr<ValueWrapper> valueContainer;
   std::unique_ptr<jsi::Value> hostValue;
   std::weak_ptr<jsi::Value> remoteValue;
-  std::string *functionCode;
+  //   std::string *functionCode;
+  std::unique_ptr<std::string> functionCode;
   bool containsHostFunction = false;
 
   ShareableValue(RuntimeManager *runtimeManager, std::shared_ptr<Scheduler> s)

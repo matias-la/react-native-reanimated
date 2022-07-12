@@ -17,12 +17,14 @@ jsi::Function function(jsi::Runtime &rt, const std::string &code) {
 std::shared_ptr<jsi::Function> WorkletsCache::getFunction(
     jsi::Runtime &rt,
     std::shared_ptr<FrozenObject> frozenObj,
-	const std::string& code) {
+    const char *code) {
+  // const std::string& code) {
   long long workletHash =
       ValueWrapper::asNumber(frozenObj->map["__workletHash"]->valueContainer);
   if (worklets.count(workletHash) == 0) {
     auto codeBuffer = std::make_shared<const jsi::StringBuffer>(
-        "(" + code + ")");
+        "(" + (code ? std::string(code) : std::string("")) + ")");
+    // "(" + code + ")");
     auto func = rt.evaluateJavaScript(
                       codeBuffer,
                       ValueWrapper::asString(
