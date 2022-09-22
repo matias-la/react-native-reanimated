@@ -41,6 +41,7 @@
   "files": [
     "Common/",
     "lib/",
+    "!lib/reanimated2/jestUtils.js",
     "android/src/main/AndroidManifest.xml",
     "android/src/main/java/",
     "android/build.gradle",
