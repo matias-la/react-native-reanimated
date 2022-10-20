@@ -17,7 +17,7 @@ const {
   Platform,
   processColor,
 } = require('react-native');
-const ReanimatedV2 = require('./src/reanimated2/mock');
+const ReanimatedV2 = require('./lib/reanimated2/mock');
 
 function NOOP() {
   // noop
