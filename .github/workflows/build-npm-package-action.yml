@@ -1,17 +1,7 @@
 name: Build npm package
 
 on:
-  workflow_call:
-    inputs:
-      version:
-        required: true
-        type: string
-      ref:
-        required: false
-        type: string
-      upload_binaries:
-        required: false
-        type: boolean
+  push:
 
 jobs:
   build:
