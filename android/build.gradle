@@ -1039,9 +1039,9 @@ dependencies {
         }
         if (JS_RUNTIME == "hermes") {
             if (isPackageBuild()) {
-                implementation "com.facebook.react:hermes-android:0.71.0"
+                implementation "com.facebook.react:hermes-android:0.71.1"
             } else {
-                implementation "com.facebook.react:hermes-android:0.71.0" // version substituted by RNGP
+                implementation "com.facebook.react:hermes-android:0.71.1" // version substituted by RNGP
             }
         }
     } else {
