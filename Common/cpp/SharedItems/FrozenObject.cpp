@@ -17,6 +17,15 @@ jsi::Value functionToString(jsi::Runtime &rt, const jsi::Function &obj) {
   return code;
 }
 
+void consoleLog(jsi::Runtime &rt, const jsi::Value &obj) {
+  jsi::Function func = rt.global()
+      .getPropertyAsObject(rt, "console")
+      .getPropertyAsFunction(rt, "log");
+  func.call(rt, obj);
+}
+
+
+
 FrozenObject::FrozenObject(
     jsi::Runtime &rt,
     const jsi::Object &object,
@@ -32,6 +41,9 @@ FrozenObject::FrozenObject(
         // Save the function's source code, not the function itself
         jsi::Function workletFunction = object.getPropertyAsFunction(rt, "__reanimated_workletFunction");
         jsi::Value code = functionToString(rt, workletFunction);
+		consoleLog(rt, object.getProperty(rt, "__workletHash"));
+		consoleLog(rt, object.getProperty(rt, "__location"));
+		consoleLog(rt, code);
         map["__reanimated_workletFunction"] = ShareableValue::adapt(
             rt, code, runtimeManager);
     } else {
