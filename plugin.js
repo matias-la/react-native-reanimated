@@ -474,7 +474,12 @@ function makeWorklet(t, fun, state) {
     t.expressionStatement(
       t.assignmentExpression(
         '=',
-        t.memberExpression(privateFunctionId, t.identifier('asString'), false),
+	t.memberExpression(
+	  privateFunctionId,
+	  t.callExpression(t.memberExpression(t.identifier('Symbol'), t.identifier('for')), [t.stringLiteral('__reanimated_workletCode')]),
+	  true,
+	),
+        // t.memberExpression(privateFunctionId, t.identifier('asString'), false),
         t.stringLiteral(funString)
       )
     ),

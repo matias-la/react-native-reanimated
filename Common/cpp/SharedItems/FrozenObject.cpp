@@ -5,6 +5,15 @@
 
 namespace reanimated {
 
+jsi::PropNameID workletCodePropName(jsi::Runtime &rt) {
+  jsi::Function symbolFor = rt.global()
+    .getPropertyAsObject(rt, "Symbol")
+    .getPropertyAsFunction(rt, "for");
+  jsi::Value val = symbolFor.call(rt, jsi::String::createFromAscii(rt, "__reanimated_workletCode"));
+  jsi::Symbol sym = val.asSymbol(rt);
+  return jsi::PropNameID::forSymbol(rt, sym);
+}
+
 FrozenObject::FrozenObject(
     jsi::Runtime &rt,
     const jsi::Object &object,
@@ -16,9 +25,18 @@ FrozenObject::FrozenObject(
     auto propertyName = propertyNames.getValueAtIndex(rt, i).asString(rt);
     namesOrder.push_back(propertyName.utf8(rt));
     std::string nameStr = propertyName.utf8(rt);
+    if (nameStr == "__reanimated_workletCode")
+      continue;
     map[nameStr] = ShareableValue::adapt(
         rt, object.getProperty(rt, propertyName), runtimeManager);
     this->containsHostFunction |= map[nameStr]->containsHostFunction;
+  }
+  jsi::PropNameID prop = workletCodePropName(rt);
+  if (object.hasProperty(rt, prop)) {
+    namesOrder.push_back("__reanimated_workletCode");
+    map["__reanimated_workletCode"] = ShareableValue::adapt(
+	rt, object.getProperty(rt, prop), runtimeManager);
+    this->containsHostFunction |= map["__reanimated_workletCode"]->containsHostFunction;
   }
 }
 
