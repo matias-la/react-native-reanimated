@@ -5,13 +5,22 @@
 
 namespace reanimated {
 
-jsi::PropNameID workletCodePropName(jsi::Runtime &rt) {
+jsi::Symbol workletCodeSymbol(jsi::Runtime &rt) {
   jsi::Function symbolFor = rt.global()
     .getPropertyAsObject(rt, "Symbol")
     .getPropertyAsFunction(rt, "for");
   jsi::Value val = symbolFor.call(rt, jsi::String::createFromAscii(rt, "__reanimated_workletCode"));
-  jsi::Symbol sym = val.asSymbol(rt);
-  return jsi::PropNameID::forSymbol(rt, sym);
+  return val.asSymbol(rt);
+}
+
+bool hasOwnProperty(jsi::Runtime &rt, const jsi::Object &object, const jsi::Symbol &sym) {
+  jsi::Function func = rt.global()
+    .getPropertyAsObject(rt, "Object")
+    .getPropertyAsObject(rt, "prototype")
+    .getPropertyAsFunction(rt, "hasOwnProperty");
+
+  jsi::Value val = func.callWithThis(rt, object, sym);
+  return val.asBool();
 }
 
 FrozenObject::FrozenObject(
@@ -31,8 +40,9 @@ FrozenObject::FrozenObject(
         rt, object.getProperty(rt, propertyName), runtimeManager);
     this->containsHostFunction |= map[nameStr]->containsHostFunction;
   }
-  jsi::PropNameID prop = workletCodePropName(rt);
-  if (object.hasProperty(rt, prop)) {
+  jsi::Symbol sym = workletCodeSymbol(rt);
+  jsi::PropNameID prop = jsi::PropNameID::forSymbol(rt, sym);
+  if (hasOwnProperty(rt, object, sym)) {
     namesOrder.push_back("__reanimated_workletCode");
     map["__reanimated_workletCode"] = ShareableValue::adapt(
 	rt, object.getProperty(rt, prop), runtimeManager);
