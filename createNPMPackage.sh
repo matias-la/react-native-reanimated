@@ -6,35 +6,35 @@ ROOT=$(pwd)
 
 unset CI
 
-versions=("0.71")
-version_name=("71")
+react_native_major_version="71"
+react_native_version="0.71"
 
-for index in 0
+rm -rf node_modules
+yarn --frozen-lockfile
+
+for for_hermes in "True" "False"
 do
-  yarn add react-native@"${versions[$index]}" --dev
-  for for_hermes in "True" "False"
-  do
-    engine="jsc"
-    if [ "$for_hermes" == "True" ]; then
-      engine="hermes"
-    fi
-    echo "engine=${engine}"
+  engine="jsc"
+  if [ "$for_hermes" == "True" ]; then
+    engine="hermes"
+  fi
+  echo "engine=${engine}"
 
-    cd android
-    ./gradlew clean
+  cd android
+  ./gradlew clean
 
-    CLIENT_SIDE_BUILD="False" JS_RUNTIME=${engine} REANIMATED_PACKAGE_BUILD="1" ./gradlew :assembleDebug --no-build-cache --rerun-tasks
+  CLIENT_SIDE_BUILD="False" JS_RUNTIME=${engine} REANIMATED_PACKAGE_BUILD="1" ./gradlew :assembleDebug --no-build-cache --rerun-tasks
 
-    cd $ROOT
+  cd $ROOT
 
-    rm -rf android/react-native-reanimated-"${version_name[$index]}-${engine}".aar
-    cp android/build/outputs/aar/*.aar android/react-native-reanimated-"${version_name[$index]}-${engine}".aar
-  done
+  rm -rf android/react-native-reanimated-"$react_native_major_version-${engine}".aar
+  cp android/build/outputs/aar/*.aar android/react-native-reanimated-"$react_native_major_version-${engine}".aar
 done
 
-git restore yarn.lock package.json
-rm -rf node_modules
-yarn
+# Hack to make tsc work. In the upstream repo, it worked because it was using the type signatures
+# of an old RN version (0.71.0-rc.5)
+# This can probably be removed in the next reanimated version
+patch node_modules/react-native/Libraries/StyleSheet/StyleSheetTypes.d.ts fix-rn-types.patch
 
 cp -R android/build build_output
 cd android && REANIMATED_PACKAGE_BUILD="1" ./gradlew clean && cd ..
