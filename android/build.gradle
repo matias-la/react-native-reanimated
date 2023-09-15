@@ -361,8 +361,8 @@ if (!BUILD_FROM_SOURCE && !isNewArchitectureEnabled()) { // Reanimated2 only
     if (REACT_NATIVE_MINOR_VERSION < 65) {
         tasks.register("replaceSoTaskDebug", replaceSoTask)
         tasks.register("replaceSoTaskRelease", replaceSoTask)
-        Task replaceSoTaskDebug = project.getTasks().findByPath(":react-native-reanimated:replaceSoTaskDebug")
-        Task replaceSoTaskRelease = project.getTasks().findByPath(":react-native-reanimated:replaceSoTaskRelease")
+        Task replaceSoTaskDebug = project.getTasks().findByPath(":exodus_react-native-reanimated:replaceSoTaskDebug")
+        Task replaceSoTaskRelease = project.getTasks().findByPath(":exodus_react-native-reanimated:replaceSoTaskRelease")
 
         if (replaceSoTaskDebug != null && replaceSoTaskRelease != null) {
             rootProject.getSubprojects().forEach({project ->

@@ -1,6 +1,6 @@
 {
-  "name": "react-native-reanimated",
-  "version": "2.15.0",
+  "name": "@exodus/react-native-reanimated",
+  "version": "2.15.0-exodus.0",
   "description": "More powerful alternative to Animated library for React Native.",
   "scripts": {
     "test": "yarn run format:js && yarn run lint:js && yarn run test:unit",
@@ -61,7 +61,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/software-mansion/react-native-reanimated.git"
+    "url": "git+https://github.com/ExodusMovement/react-native-reanimated.git"
   },
   "author": {
     "email": "krzys.magiera@gmail.com",
@@ -70,9 +70,9 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "bugs": {
-    "url": "https://github.com/software-mansion/react-native-reanimated/issues"
+    "url": "https://github.com/ExodusMovement/react-native-reanimated/issues"
   },
-  "homepage": "https://github.com/software-mansion/react-native-reanimated#readme",
+  "homepage": "https://github.com/ExodusMovement/react-native-reanimated#readme",
   "dependencies": {
     "@babel/plugin-transform-object-assign": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
