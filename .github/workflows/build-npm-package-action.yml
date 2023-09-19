@@ -28,7 +28,9 @@ jobs:
         env:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: >-
-          env && ./createNPMPackage.sh ${{ inputs.version }}
+          env
+          ls -lah /opt/hostedtoolcache/Java_Zulu_jdk/11.0.20-8/x64 /usr/lib/jvm/temurin-8-jdk-amd64 /opt/hostedtoolcache/ndk/r21d/x64 /usr/local/lib/android/sdk/ndk/25.2.9519653 /usr/lib/jvm/temurin-17-jdk-amd64 /usr/local/lib/android/sdk/ndk/25.2.9519653 /usr/local/lib/android/sdk
+          exit 2
 
       - run: echo "PACKAGE_NAME=$(ls -l | egrep -o "react-native-reanimated-(.*)(=?\.tgz)")" >> $GITHUB_ENV
       
