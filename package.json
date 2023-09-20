@@ -46,6 +46,7 @@
     "android/src/main/java/",
     "android/build.gradle",
     "android/",
+    "!android/.gradle",
     "ios/",
     "!ios/build/",
     "!android/build/",
