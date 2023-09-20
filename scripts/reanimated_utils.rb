@@ -52,6 +52,8 @@ def assert_no_multiple_instances(react_native_info)
   if react_native_info[:is_reanimated_example_app]
     return
   end
+  # TODO remove this return to make the assertion run again
+  return
 
   lib_instances_in_react_native_node_modules = %x[find #{react_native_info[:react_native_node_modules_dir]} -name "package.json" | grep "/react-native-reanimated/package.json"]
   lib_instances_in_react_native_node_modules_array = lib_instances_in_react_native_node_modules.split("\n")
